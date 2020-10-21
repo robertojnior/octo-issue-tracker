@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  username: postgres
+  password: postgres
+  host: localhost
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: octo_issue_tracker_development
+
+test:
+  <<: *default
+  database: octo_issue_tracker_test
+
+production:
+  <<: *default
+  database: octo_issue_tracker_production
+  username: octo_issue_tracker
+  password: <%= ENV['OCTO_ISSUE_TRACKER_DATABASE_PASSWORD'] %>
