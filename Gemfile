@@ -4,6 +4,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.2'
 
 gem 'bootsnap', '1.4.8', require: false
+gem 'grape', '1.5.0'
+gem 'grape-entity', '0.8.1'
 gem 'pg', '1.2.3'
 gem 'puma', '5.0.2'
 gem 'rails', '6.0.3.4'
