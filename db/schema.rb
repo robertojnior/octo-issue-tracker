@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_22_004221) do
+ActiveRecord::Schema.define(version: 2020_10_22_200903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "events", force: :cascade do |t|
+    t.bigint "issue_id", null: false
+    t.string "action", limit: 12, null: false
+    t.datetime "issued_on", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["issue_id"], name: "index_events_on_issue_id"
+  end
 
   create_table "issues", force: :cascade do |t|
     t.bigint "number", null: false
@@ -24,4 +33,5 @@ ActiveRecord::Schema.define(version: 2020_10_22_004221) do
     t.index ["number"], name: "index_issues_on_number", unique: true
   end
 
+  add_foreign_key "events", "issues"
 end
