@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe OctoIssueTracker::V1::IssuesAPI, type: :request do
+RSpec.describe V1::IssuesAPI, type: :request do
   describe 'GET /v1/issues' do
     let(:issue) { build(:issue) }
 
