@@ -16,11 +16,12 @@ ActiveRecord::Schema.define(version: 2020_10_22_004221) do
   enable_extension "plpgsql"
 
   create_table "issues", force: :cascade do |t|
-    t.integer "number", null: false
+    t.bigint "number", null: false
     t.string "title", null: false
     t.string "body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["number"], name: "index_issues_on_number", unique: true
   end
+
 end
