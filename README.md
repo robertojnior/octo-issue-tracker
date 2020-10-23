@@ -16,6 +16,12 @@ You need to install [Docker](https://www.docker.com/), [Docker Compose](https://
 Inside the project folder perform:
 
 ```shell
+docker-compose build
+```
+
+After that, execute:
+
+```shell
 EDITOR=vim rails credentials:edit --environment development
 ```
 
@@ -24,12 +30,6 @@ Now you have to set two environment variables:
 - `default_username`: a default username for basic authentication.
 
 - `default_password`: a default password for basic authentication.
-
-After that, execute:
-
-```shell
-docker-compose build
-```
 
 ## Usage
 
