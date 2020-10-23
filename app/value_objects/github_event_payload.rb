@@ -1,11 +1,11 @@
 class GithubEventPayload
   attr_reader :issue
 
-  def initialize(payload, issued_on = Time.zone.now)
+  def initialize(payload)
     @payload = payload
-    @issued_on = issued_on
     @issue = find_or_initialize_issue
     @action = @payload['action']
+    @issued_on = @payload['issue']['updated_at']
   end
 
   def build_issue_params

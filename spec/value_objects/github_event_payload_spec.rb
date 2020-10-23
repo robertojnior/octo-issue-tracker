@@ -2,13 +2,7 @@ require 'rails_helper'
 
 RSpec.describe GithubEventPayload, type: :value_object do
   before do
-    Timecop.freeze(Time.zone.parse('2020-10-22 20:46:00'))
-
     allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
-  end
-
-  after do
-    Timecop.return
   end
 
   let(:payload) {
@@ -17,7 +11,8 @@ RSpec.describe GithubEventPayload, type: :value_object do
       'issue' => {
         'number' => Faker::Number.number,
         'title' => Faker::Lorem.sentence,
-        'body' => Faker::Lorem.paragraph
+        'body' => Faker::Lorem.paragraph,
+        'updated_at' => Time.zone.parse('2020-10-22 00:22:00').iso8601
       }
     }
   }
@@ -41,7 +36,7 @@ RSpec.describe GithubEventPayload, type: :value_object do
           events_attributes: [
             {
               action: payload['action'],
-              issued_on: Time.zone.now
+              issued_on: payload['issue']['updated_at']
             }
           ]
         }
