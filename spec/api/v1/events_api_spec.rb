@@ -4,6 +4,8 @@ RSpec.describe V1::EventsAPI, type: :request do
   let(:issue) { build(:issue_with_events) }
 
   describe 'GET /v1/issues/:number/events' do
+    mock_authentication
+
     context 'when issue is found' do
       before do
         allow(Issue).to receive(:find_by).with(number: issue.number.to_s).and_return(issue)
@@ -60,7 +62,7 @@ RSpec.describe V1::EventsAPI, type: :request do
       end
     end
 
-    context 'when its a github ping event' do
+    context 'when its not a github ping event' do
       let(:payload) {
         {
           'action' => EventAction.list.sample,

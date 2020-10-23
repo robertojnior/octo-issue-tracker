@@ -24,6 +24,7 @@ module V1
     end
 
     desc 'Create events and issue if doesnt exists'
+    route_setting :auth, disabled: true
     params do
       optional :action, type: String, desc: 'Event action'
       given :action do

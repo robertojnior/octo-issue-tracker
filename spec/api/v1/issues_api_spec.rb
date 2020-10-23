@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe V1::IssuesAPI, type: :request do
   describe 'GET /v1/issues' do
+    mock_authentication
+
     let(:issue) { build(:issue) }
 
     before do

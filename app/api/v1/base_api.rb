@@ -4,6 +4,10 @@ module V1
 
     format :json
 
+    helpers Helpers::BasicAuthenticationHelper
+
+    before { authenticate! unless public? }
+
     mount IssuesAPI
     mount EventsAPI
   end
