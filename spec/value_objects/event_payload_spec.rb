@@ -18,11 +18,42 @@ RSpec.describe EventPayload, type: :value_object do
   subject { described_class.new(payload) }
 
   describe 'Public methods' do
-    describe '#build_issue_params' do
-      before do
-        allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
+    describe '#find_or_initialize_issue' do
+      context 'when exists an issue with payload number' do
+        let(:issue) { instance_double('Issue') }
+
+        it 'returns a instance of issue' do
+          allow(Issue).to receive(:find_by).with(number: issue_number).and_return(issue)
+
+          expect(subject.find_or_initialize_issue).to eq(issue)
+        end
       end
 
+      context 'when doesnt exists an issue with payload number' do
+        before do
+          allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
+        end
+
+        it 'returns a anonymous struct' do
+          expect(subject.find_or_initialize_issue).to be_a(Struct)
+        end
+
+        it 'have a predefined set of attributes' do
+          allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
+
+          attributes = {
+            number: payload['issue']['number'],
+            title: payload['issue']['title'],
+            body: payload['issue']['body'],
+            persisted?: false
+          }
+
+          expect(subject.find_or_initialize_issue).to have_attributes(attributes)
+        end
+      end
+    end
+
+    describe '#build_issue_params' do
       let(:issue_params) {
         {
           number: payload['issue']['number'],
@@ -45,7 +76,7 @@ RSpec.describe EventPayload, type: :value_object do
       context 'when exists an issue with payload number' do
         let(:issue) { instance_double('Issue', persisted?: true) }
 
-        it 'builds without issue params ' do
+        it 'builds only event params' do
           allow(Issue).to receive(:find_by).with(number: issue_number).and_return(issue)
 
           expect(subject.build_issue_params).to eq(events_params)
@@ -54,6 +85,8 @@ RSpec.describe EventPayload, type: :value_object do
 
       context 'when doesnt exists an issue with payload number' do
         it 'builds with issue params' do
+          allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
+
           expect(subject.build_issue_params).to eq(issue_params.merge(events_params))
         end
       end

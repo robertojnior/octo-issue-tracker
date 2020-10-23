@@ -1,15 +1,28 @@
 class EventPayload
-  attr_reader :issue
-
   def initialize(payload)
     @payload = payload
     @action = @payload['action']
     @issued_on = @payload['issue']['updated_at']
   end
 
-  def build_issue_params
-    @issue = find_or_initialize_issue
+  def find_or_initialize_issue
+    @issue ||= begin
+      issue = Issue.find_by(number: @payload['issue']['number'])
 
+      if issue.nil?
+        Struct.new(:number, :title, :body, :persisted?).new(
+          @payload['issue']['number'],
+          @payload['issue']['title'],
+          @payload['issue']['body'],
+          false
+        )
+      else
+        issue
+      end
+    end
+  end
+
+  def build_issue_params
     issue_params.merge(events_params)
   end
 
@@ -31,20 +44,9 @@ class EventPayload
 
   private
 
-  def find_or_initialize_issue
-    issue = Issue.find_by(number: @payload['issue']['number'])
-
-    return issue unless issue.nil?
-
-    Struct.new(:number, :title, :body, :persisted?).new(
-      @payload['issue']['number'],
-      @payload['issue']['title'],
-      @payload['issue']['body'],
-      false
-    )
-  end
-
   def issue_params
+    issue = find_or_initialize_issue
+
     issue.persisted? ? {} : { number: issue.number, title: issue.title, body: issue.body }
   end
 
