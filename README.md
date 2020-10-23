@@ -17,6 +17,7 @@ Inside the project folder perform:
 
 ```shell
 docker-compose build
+docker-compose run --rm web rake db:create db:migrate
 ```
 
 After that, execute:
