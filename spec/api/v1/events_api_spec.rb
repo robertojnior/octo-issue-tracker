@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe V1::EventsAPI, type: :request do
-  describe 'GET /v1/issues/:number/events' do
-    let(:issue) { build(:issue, :with_events) }
+  let(:issue) { build(:issue_with_events) }
 
+  describe 'GET /v1/issues/:number/events' do
     context 'when issue is found' do
       before do
         allow(Issue).to receive(:find_by).with(number: issue.number.to_s).and_return(issue)
@@ -41,6 +41,64 @@ RSpec.describe V1::EventsAPI, type: :request do
         expected_response = { error: "Couldn't find Issue with number #{issue.number}"}.to_json
 
         expect(response.body).to eq(expected_response)
+      end
+    end
+  end
+
+  describe 'POST /v1/events' do
+    let(:payload) {
+      {
+        'action' => EventAction.list.sample,
+        'issue' => {
+          'number' => Faker::Number.number,
+          'title' => Faker::Lorem.sentence,
+          'body' => Faker::Lorem.paragraph,
+          'updated_at' => Time.zone.parse('2020-10-23 00:37:00').iso8601
+        }
+      }
+    }
+
+    let(:event_payload) { EventPayload.new(payload) }
+
+    context 'when event registration result is valid' do
+      it 'is expected to have http status CREATED' do
+        expect_any_instance_of(EventRegistration).to receive(:call).with(event_payload).and_return(issue)
+
+        post '/v1/events', params: payload
+
+        expect(response).to have_http_status(:created)
+      end
+
+      it 'is expected to renders full issue entity as JSON' do
+        expect_any_instance_of(EventRegistration).to receive(:call).with(event_payload).and_return(issue)
+
+        post '/v1/events', params: payload
+
+        expected_response = Entities::IssueEntity.new(issue, type: :full).to_json
+
+        expect(response.body).to eq(expected_response)
+      end
+    end
+
+    context 'when event registration result is invalid' do
+      let(:issue) { build(:issue, events_attributes: [action: 'invalid']) }
+
+      it 'is expected to have http status UNPROCESSABLE ENTITY' do
+        expect_any_instance_of(EventRegistration).to receive(:call).with(event_payload).and_return(issue)
+
+        post '/v1/events', params: payload
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'is expected to renders unprocessable entity errors messages as JSON' do
+        expect_any_instance_of(EventRegistration).to receive(:call).with(event_payload).and_return(issue)
+
+        post '/v1/events', params: payload
+
+        issue.validate
+
+        expect(response.body).to eq({ errors: issue.errors }.to_json)
       end
     end
   end
