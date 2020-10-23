@@ -38,9 +38,9 @@ RSpec.describe V1::EventsAPI, type: :request do
       it 'is expected to renders not found error message as JSON' do
         get "/v1/issues/#{issue.number}/events"
 
-        expected_response = { error: "Couldn't find Issue with number #{issue.number}"}
+        expected_response = { error: "Couldn't find Issue with number #{issue.number}"}.to_json
 
-        expect(response.body).not_to eq(expected_response)
+        expect(response.body).to eq(expected_response)
       end
     end
   end

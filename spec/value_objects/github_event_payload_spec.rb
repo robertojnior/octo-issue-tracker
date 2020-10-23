@@ -12,7 +12,7 @@ RSpec.describe GithubEventPayload, type: :value_object do
         'number' => Faker::Number.number,
         'title' => Faker::Lorem.sentence,
         'body' => Faker::Lorem.paragraph,
-        'updated_at' => Time.zone.parse('2020-10-22 00:22:00').iso8601
+        'updated_at' => Time.zone.parse('2020-10-23 00:22:00').iso8601
       }
     }
   }
