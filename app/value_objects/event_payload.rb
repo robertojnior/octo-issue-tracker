@@ -10,12 +10,11 @@ class EventPayload
       issue = Issue.find_by(number: @payload['issue']['number'])
 
       if issue.nil?
-        Struct.new(:number, :title, :body, :persisted?).new(
-          @payload['issue']['number'],
-          @payload['issue']['title'],
-          @payload['issue']['body'],
-          false
-        )
+        Issue.new.tap do |issue|
+          issue.number = @payload['issue']['number']
+          issue.title = @payload['issue']['title']
+          issue.body = @payload['issue']['body']
+        end
       else
         issue
       end

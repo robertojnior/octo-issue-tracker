@@ -13,42 +13,39 @@ RSpec.describe EventPayload, type: :value_object do
     }
   }
 
-  let(:issue_number) { payload['issue']['number'] }
+  let(:number) { payload['issue']['number'] }
 
   subject { described_class.new(payload) }
 
   describe 'Public methods' do
     describe '#find_or_initialize_issue' do
       context 'when exists an issue with payload number' do
-        let(:issue) { instance_double('Issue') }
+        let(:issue) { create(:issue) }
 
-        it 'returns a instance of issue' do
-          allow(Issue).to receive(:find_by).with(number: issue_number).and_return(issue)
+        it 'returns a persisted instance of issue' do
+          allow(Issue).to receive(:find_by).with(number: number).and_return(issue)
 
-          expect(subject.find_or_initialize_issue).to eq(issue)
+          expect(subject.find_or_initialize_issue).to be_persisted
+        end
+
+        it 'returns instance of issue' do
+          allow(Issue).to receive(:find_by).with(number: number).and_return(issue)
+
+          expect(subject.find_or_initialize_issue).to be_a_instance_of(Issue)
         end
       end
 
       context 'when doesnt exists an issue with payload number' do
         before do
-          allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
+          allow(Issue).to receive(:find_by).with(number: number).and_return(nil)
         end
 
-        it 'returns a anonymous struct' do
-          expect(subject.find_or_initialize_issue).to be_a(Struct)
+        it 'returns a new record instance of issue' do
+          expect(subject.find_or_initialize_issue).to be_a_new_record
         end
 
-        it 'have a predefined set of attributes' do
-          allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
-
-          attributes = {
-            number: payload['issue']['number'],
-            title: payload['issue']['title'],
-            body: payload['issue']['body'],
-            persisted?: false
-          }
-
-          expect(subject.find_or_initialize_issue).to have_attributes(attributes)
+        it 'returns instance of issue' do
+          expect(subject.find_or_initialize_issue).to be_a_instance_of(Issue)
         end
       end
     end
@@ -77,7 +74,7 @@ RSpec.describe EventPayload, type: :value_object do
         let(:issue) { instance_double('Issue', persisted?: true) }
 
         it 'builds only event params' do
-          allow(Issue).to receive(:find_by).with(number: issue_number).and_return(issue)
+          allow(subject).to receive(:find_or_initialize_issue).and_return(issue)
 
           expect(subject.build_issue_params).to eq(events_params)
         end
@@ -85,7 +82,7 @@ RSpec.describe EventPayload, type: :value_object do
 
       context 'when doesnt exists an issue with payload number' do
         it 'builds with issue params' do
-          allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
+          allow(Issue).to receive(:find_by).with(number: number).and_return(nil)
 
           expect(subject.build_issue_params).to eq(issue_params.merge(events_params))
         end
