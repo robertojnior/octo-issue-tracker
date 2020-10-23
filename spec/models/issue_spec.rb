@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Issue, type: :model do
   describe 'Associations' do
-    it { is_expected.to have_many(:events) }
+    it { is_expected.to have_many(:events).dependent(:destroy) }
   end
 
   describe 'Validations' do
