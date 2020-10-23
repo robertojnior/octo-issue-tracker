@@ -6,7 +6,7 @@ It's a simple API that can listen to github issues events. Consists of three mai
 
 - `GET /v1/issues`: that lists all the issues saved.
 
-- `GET /v1/issues/:number/events`: that lists all the events that occurred on a especific issue.
+- `GET /v1/issues/:number/events`: that lists all the events that occurred on a specific issue.
 
 - `POST /v1/events`: the webhook that you can use to listen and save issue events.
 
