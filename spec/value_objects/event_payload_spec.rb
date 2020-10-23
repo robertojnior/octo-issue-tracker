@@ -1,10 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe GithubEventPayload, type: :value_object do
-  before do
-    allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
-  end
-
+RSpec.describe EventPayload, type: :value_object do
   let(:payload) {
     {
       'action' => EventAction.list.sample,
@@ -23,6 +19,10 @@ RSpec.describe GithubEventPayload, type: :value_object do
 
   describe 'Public methods' do
     describe '#build_issue_params' do
+      before do
+        allow(Issue).to receive(:find_by).with(number: issue_number).and_return(nil)
+      end
+
       let(:issue_params) {
         {
           number: payload['issue']['number'],
