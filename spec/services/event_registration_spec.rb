@@ -66,14 +66,20 @@ RSpec.describe EventRegistration, type: :service do
 
         let(:event_payload) { EventPayload.new(invalid_payload) }
 
-        it 'return issue validation errors' do
+        before do
           allow(Issue).to receive(:find_by).with(number: number).and_return(nil)
+        end
 
-          issue = Issue.new(event_payload.build_issue_params)
+        it 'returns a invalid issue' do
+          expect(subject.(event_payload)).not_to be_valid
+        end
 
-          issue.validate
+        it 'doesnt creates a new issue' do
+          expect { subject.(event_payload) }.not_to change(Issue, :count)
+        end
 
-          expect(subject.(event_payload).to_json).to eq(issue.errors.to_json)
+        it 'doesnt creates a new event' do
+          expect { subject.(event_payload) }.not_to change(Event, :count)
         end
       end
     end

@@ -3,7 +3,6 @@ class EventRegistration
     @event_payload = event_payload
 
     start
-    commit
     complete
   end
 
@@ -14,13 +13,11 @@ class EventRegistration
     @issue_params = @event_payload.build_issue_params
   end
 
-  def commit
+  def complete
     @issue.assign_attributes(@issue_params)
 
     @issue.save
-  end
 
-  def complete
-    @issue.valid? ? @issue : @issue.errors
+    @issue
   end
 end
