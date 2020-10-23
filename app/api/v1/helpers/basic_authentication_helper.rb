@@ -2,7 +2,7 @@ module V1
   module Helpers
     module BasicAuthenticationHelper
       def authenticate!
-        error!({}, :unauthorized) unless authorized?
+        error!({ error: "Unauthorized" }, :unauthorized) unless authorized?
       end
 
       def public?

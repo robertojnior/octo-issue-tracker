@@ -10,7 +10,7 @@ services:
 
   web:
     build: .
-    command: puma -C config/puma.rb
+    command: bundle exec rails s -b '0.0.0.0'
     volumes:
       - .:/usr/app
     ports:

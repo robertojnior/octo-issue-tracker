@@ -23,7 +23,7 @@ docker-compose run --rm web rake db:create db:migrate
 After that, execute:
 
 ```shell
-EDITOR=vim rails credentials:edit --environment development
+docker-compose run --rm -e EDITOR=vim web bin/rails credentials:edit --environment development
 ```
 
 Now you have to set two environment variables:
@@ -76,7 +76,7 @@ ngrokBaseURL/v1/events
 In the project folder, run:
 
 ```shell
-rspec spec
+docker-compose run --rm web bundle exec rspec spec
 ```
 
 ## License
