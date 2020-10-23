@@ -44,7 +44,7 @@ To access the endpoints, you could use a API client of your preference, like [In
 
 In the request, you need to pass a basic authentication header, with the default username and password, which you defined earlier.
 
-The `POST` request doesn't need authentication and he payload for it, is like the following example:
+The POST request doesn't need authentication and it's payload is like the following example:
 
 ```json
 {
