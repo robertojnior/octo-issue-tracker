@@ -5,4 +5,6 @@ class Issue < ApplicationRecord
   validates :number, uniqueness: true
 
   validates :title, presence: true
+
+  accepts_nested_attributes_for :events
 end

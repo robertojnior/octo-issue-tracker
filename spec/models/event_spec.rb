@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
+  describe 'Associations' do
+    it { is_expected.to belong_to(:issue) }
+  end
+
   describe 'Validations' do
-    it { is_expected.to validate_presence_of(:issue_id) }
+    it { is_expected.to validate_presence_of(:issue) }
 
     it { is_expected.to validate_presence_of(:action) }
     it { is_expected.to validate_length_of(:action).is_at_most(12) }
