@@ -4,6 +4,9 @@ module V1
 
     format :json
 
+    helpers Helpers::HttpStatusHelper
+
     mount IssuesAPI
+    mount EventsAPI
   end
 end
