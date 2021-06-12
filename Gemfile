@@ -8,7 +8,7 @@ gem 'enumerate_it', '3.1.0'
 gem 'grape', '1.5.0'
 gem 'grape-entity', '0.8.1'
 gem 'pg', '1.2.3'
-gem 'puma', '5.0.2'
+gem 'puma', '5.3.1'
 gem 'rails', '6.0.3.4'
 gem 'tzinfo-data', '1.2020.3', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
